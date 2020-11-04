@@ -1,11 +1,11 @@
 ---
 language: python
 services: docker
-os: linux
-dist: xenial
+
 cache: pip
+
 install:
-  - pip install ansible molecule docker yamllint ansible-lint
+  - pip install molecule[docker] yamllint ansible-lint docker
 
 script:
   - molecule --version

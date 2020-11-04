@@ -1,0 +1,8 @@
+# Molecule managed
+
+FROM {{ item.image }}
+
+RUN if [ $(command -v apt-get) ]; then apt-get update && apt-get install -y bash && apt-get clean; \
+    elif [ $(command -v dnf) ]; then dnf makecache && dnf install --assumeyes bash && dnf clean all; \
+    elif [ $(command -v yum) ]; then yum makecache fast && yum install -y bash && sed -i 's/plugins=0/plugins=1/g' /etc/yum.conf && yum clean all; \
+    fi

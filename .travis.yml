@@ -1,0 +1,16 @@
+---
+language: python
+services: docker
+os: linux
+dist: xenial
+cache: pip
+install:
+  - pip install ansible molecule docker yamllint ansible-lint
+
+script:
+  - molecule --version
+  - molecule test -s python2
+  - molecule test -s python3
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

@@ -1,0 +1,11 @@
+---
+# This is an example playbook to execute Ansible tests.
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    check_python_version: "{{ python_version | default('python3')}}"
+  tasks:
+    - name: test installed python
+      raw: command -v {{ check_python_version }}
+      changed_when: false

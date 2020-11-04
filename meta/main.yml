@@ -1,0 +1,27 @@
+---
+galaxy_info:
+  role_name: install_python
+  author: Marian Craciun
+  description: Install the python a system withouth
+  license: MIT
+
+  min_ansible_version: 2.6
+  galaxy_tags:
+    - bootstrap
+    - python2
+    - python3
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+        - stretch
+    - name: Ubuntu
+      versions:
+        - focal
+        - bionic
+        - xenial
+    - name: EL
+      versions:
+        - 8
+        - 7
+dependencies: []

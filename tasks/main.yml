@@ -1,0 +1,80 @@
+---
+- name: determine OS Distro/Version
+  raw: |
+    if [ -f /etc/os-release ]; then
+        # freedesktop.org and systemd
+        . /etc/os-release
+        OS=$NAME
+        VER=$VERSION_ID
+    elif type lsb_release >/dev/null 2>&1; then
+        # linuxbase.org
+        OS=$(lsb_release -si)
+        VER=$(lsb_release -sr)
+    elif [ -f /etc/lsb-release ]; then
+        # For some versions of Debian/Ubuntu without lsb_release command
+        . /etc/lsb-release
+        OS=$DISTRIB_ID
+        VER=$DISTRIB_RELEASE
+    elif [ -f /etc/debian_version ]; then
+        # Older Debian/Ubuntu/etc.
+        OS=Debian
+        VER=$(cat /etc/debian_version)
+    elif [ -f /etc/SuSe-release ]; then
+        OS=SuSe
+        VER=""
+    elif [ -f /etc/redhat-release ]; then
+        # Older Red Hat, CentOS, etc.
+        OS=RedHat
+        VER=""
+    else
+        # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+        OS=$(uname -s)
+        VER=$(uname -r)
+    fi
+    echo $OS
+    echo $VER
+  register: distro_info
+  changed_when: false
+  failed_when: distro_info.rc != 0 or distro_info.stdout_lines|length != 2
+
+- name: check for compatible distro (Ubuntu/RedHat/Debian)
+  assert:
+    that: distro_info.stdout | regex_search('(ubuntu|debian|redhat|centos)', multiline=True, ignorecase=True)
+    quiet: true
+    fail_msg: >-
+      The installed system
+      {{ distro_info.stdout_lines[0] }} {{ distro_info.stdout_lines[1] }}
+      is not supported
+
+- name: set facts with detected OS
+  set_fact:
+    is_debian: "{{ distro_info.stdout is regex('(ubuntu|debian)', multiline=True, ignorecase=True) }}"
+    is_redhat: "{{ distro_info.stdout is regex('(redhat|centos)', multiline=True, ignorecase=True) }}"
+
+- name: install debian python
+  raw: >-
+    export DEBIAN_FRONTEND=noninteractive &&
+    export UCF_FORCE_CONFOLD=1 &&
+    command -v {{ install_python_package }} ||
+    (
+      apt-get -y update &&
+      apt-get install -y {{ install_python_package }}-minimal &&
+      exit 101
+    )
+  register: py_inst
+  changed_when: py_inst.rc == 101
+  failed_when: py_inst.rc != 101 and py_inst.rc != 0
+  when: is_debian|bool
+
+- name: install redhat python
+  raw: >-
+    command -v {{ install_python_package }} ||
+    (
+      yum -y update &&
+      yum install -y {{ install_python_package }} &&
+      exit 101
+    )
+  register: py_inst
+  changed_when: py_inst.rc == 101
+  failed_when: py_inst.rc != 101 and py_inst.rc != 0
+  when: is_redhat|bool

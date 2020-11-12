@@ -2,7 +2,7 @@
 galaxy_info:
   role_name: install_python
   author: Marian Craciun
-  description: Ansible role for installing python 2 or 3 using raw module on the remote host that does not have python installed yet.
+  description: Install python 2 or 3 using the raw module where the remove has no python installed
   license: MIT
 
   min_ansible_version: 2.6

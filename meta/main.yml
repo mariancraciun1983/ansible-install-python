@@ -2,7 +2,7 @@
 galaxy_info:
   role_name: install_python
   author: Marian Craciun
-  description: Install python 2 or 3 using the raw module where the remove has no python installed
+  description: Install python 2 or 3 using the raw module where the remote system has no python installed
   license: MIT
 
   min_ansible_version: 2.6

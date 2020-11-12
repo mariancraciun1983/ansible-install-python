@@ -2,13 +2,13 @@
 <br />
 
 <div align="center">
-  <a href="https://travis-ci.org/mariancraciun1983/ansible-install-python">
-    <img src="https://travis-ci.org/mariancraciun1983/ansible-install-python.svg?branch=master" alt="Build Status" />
+  <a href="https://travis-ci.com/mariancraciun1983/ansible-install-python">
+    <img src="https://travis-ci.com/mariancraciun1983/ansible-install-python.svg?branch=master" alt="Build Status" />
   </a>
-  <a href="https://galaxy.ansible.com/mariancraciun1983/ansible-hetzner-installimage">
+  <a href="https://galaxy.ansible.com/mariancraciun1983/install_python">
     <img src="https://img.shields.io/ansible/role/51632" alt="Ansible Galaxy" />
   </a>
-  <a href="https://galaxy.ansible.com/mariancraciun1983/ansible-hetzner-installimage">
+  <a href="https://galaxy.ansible.com/mariancraciun1983/install_python">
     <img src="https://img.shields.io/ansible/quality/51632" alt="Ansible Quality Score" />
   </a>
   <a href="https://opensource.org/licenses/MIT">
@@ -18,7 +18,7 @@
 
 <br />
 
-Ansible role for installing python 2 or 3 on the remote host.
+Ansible role for installing python 2 or 3 using raw module on the remote host that does not have python installed yet.
 
 
 ## Introduction
@@ -70,6 +70,7 @@ stretch.example.com install_python_package=python
 ```yaml
 # playbook.yml
 - hosts: servers
+  gather_facts: no
   roles:
     - mariancraciun1983.install_python
 ```

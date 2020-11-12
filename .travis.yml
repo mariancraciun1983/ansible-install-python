@@ -4,6 +4,14 @@ services: docker
 
 cache: pip
 
+branches:
+  only:
+    - master
+    - develop
+
+before_install:
+  - python --version
+
 install:
   - pip install molecule[docker] yamllint ansible-lint docker
 
